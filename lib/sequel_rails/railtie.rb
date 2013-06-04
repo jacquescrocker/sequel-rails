@@ -24,7 +24,6 @@ module SequelRails
 
     ::SequelRails::Railties::LogSubscriber.attach_to :sequel
 
-    config.app_generators.orm :sequel, :migration => true
     config.rails_fancy_pants_logging = true
 
     config.action_dispatch.rescue_responses.merge!(
