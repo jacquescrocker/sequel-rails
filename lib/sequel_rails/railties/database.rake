@@ -20,7 +20,15 @@ namespace :db do
     task :dump => :environment do
       db_for_current_env.extension :schema_dumper
       File.open(ENV['SCHEMA'] || "#{Rails.root}/db/schema.rb", "w") do |file|
-        file.write db_for_current_env.dump_schema_migration(:same_db => true)
+        change_migration = db_for_current_env.dump_schema_migration(:same_db => true)
+
+        schema_migrations = ""
+        Sequel::Model.db["SELECT * FROM schema_migrations"].each do |migration|
+          schema_migrations << "    run(\"INSERT INTO schema_migrations (filename) VALUES ('#{migration[:filename]}');\")\n"
+        end
+
+        change_migration.gsub!(/  end\nend$/, "\n#{schema_migrations}  end\nend")
+        file.write change_migration
       end
       Rake::Task["db:schema:dump"].reenable
     end
