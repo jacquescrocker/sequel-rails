@@ -36,9 +36,9 @@ module SequelRails
 
     config.sequel = ActiveSupport::OrderedOptions.new
 
-    rake_tasks do
-      load "sequel_rails/railties/database.rake"
-    end
+    # rake_tasks do
+    #   load "sequel_rails/railties/database.rake"
+    # end
 
     initializer 'sequel.configuration' do |app|
       configure_sequel app
